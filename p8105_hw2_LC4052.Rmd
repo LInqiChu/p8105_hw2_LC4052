@@ -8,6 +8,7 @@ date: "2025-09-28"
 ```{r}
 library(tidyverse)
 library(dplyr)
+library(readxl)
 
 ```
 
@@ -81,7 +82,7 @@ unemployment_df =
 pols_df = 
   left_join(pols_month, snp_df, by = c("year","month")) |>
   left_join(unemployment_df, by = c("year","month"))
-  
+
 ```
 
 
@@ -107,10 +108,17 @@ It contains variables: "year", "month", "gov_gop", "sen_gop", "rep_gop", "gov_de
 
 # Problem 2
 
+## Clean the Mr. Trash Wheel sheet:
+
 ```{r}
-
-
-
+mrtrash_df = 
+  read_excel("./trash_collection_data/202409 Trash Wheel Collection Data.xlsx",
+             sheet = "Mr. Trash Wheel",
+             skip = 1,
+             na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  filter(!is.na(dumpster) & !is.na(weight_tons)) |>
+  mutate(sports_balls = as.integer(round(sports_balls)))
 
 
 
