@@ -52,19 +52,60 @@ snp_df =
 
 ```
 
-## Tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
 
+## Tidy the unemployment data
 
 ```{r}
 unemployment_df = 
   read_csv("./fivethirtyeight_datasets/unemployment.csv",
            na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
   pivot_longer(
-    Jan:Dec,
-    names_to = "Month", 
-    values_to = "Unemployment(%)")
+    jan:dec,
+    names_to = "month", 
+    values_to = "unemployment(%)") |>
+  mutate(
+    month = factor(month, 
+                      levels = c("jan","feb","mar","apr","may","jun",
+                                 "jul","aug","sep","oct","nov","dec"),
+                      labels = month.name))
 
 ```
+
+
+## Join the datasets by merging snp into pols, and merging unemployment into the result.
+
+
+
+
+```{r}
+pols_df = left_join(pols_month, snp_df, by = c("year","month"))
+  
+
+
+```
+
+Write a short paragraph about these datasets. Explain briefly what each dataset contained, and 
+Pols-month.csv contains variables:
+describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+
+
+
+# Problem 2
+
+```{r}
+
+
+
+
+
+
+
+
+```
+
+
+
 
 
 
@@ -77,9 +118,50 @@ unemployment_df =
 
 
 
+```
+
+
+
+```{r}
+
+
+
+
+
 
 
 
 ```
+
+
+
+
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+# Problem 3
+
+```{r}
+
+
+
+
+
+
+
+
+
+```
+
+
 
 
