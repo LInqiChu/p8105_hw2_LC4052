@@ -11,11 +11,15 @@ library(dplyr)
 
 ```
 
+
 # Problem 1
+
+## Clean the data in pols-month.csv
 
 ```{r}
 pols_month = 
-  read_csv("./fivethirtyeight_datasets/pols-month.csv") |>
+  read_csv("./fivethirtyeight_datasets/pols-month.csv",
+           na = c("NA", ".", "")) |>
   janitor::clean_names() |>
   separate(mon, c("year", "month","day")) |>
   mutate(
@@ -27,12 +31,56 @@ pols_month =
 ```
 
 
-## Including Plots
-
-You can also embed plots, for example:
+## Clean the data in snp.csv
 
 ```{r}
-plot(pressure)
+snp = 
+  read_csv("./fivethirtyeight_datasets/snp.csv",
+           na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  separate(date, c("month", "day","year")) |>
+  mutate(
+    month = month.name[as.integer(month)],
+    year = as.integer(year),
+    year = ifelse(year < 50,
+                 2000 + year,
+                 1900 + year)) |>
+  select(-day) |>
+  relocate(year, month, .before = everything()) |> 
+  arrange(year, month)
+
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
+
+
+```{r}
+  arrange()
+
+
+
+
+
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+
+
+
+
+
+
+
+```
+
+
