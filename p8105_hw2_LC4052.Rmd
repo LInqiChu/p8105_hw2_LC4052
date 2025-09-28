@@ -13,22 +13,19 @@ library(dplyr)
 
 # Problem 1
 
-## Import data
-
 ```{r}
 pols_month = 
-  read_csv("./fivethirtyeight_datasets/pols-month.csv")
+  read_csv("./fivethirtyeight_datasets/pols-month.csv") |>
+  janitor::clean_names() |>
+  separate(mon, c("year", "month","day")) |>
+  mutate(
+    month = month.name[as.integer(month)],
+    president = ifelse(prez_gop == 1, "gop", "dem")
+  )|>
+  select(-prez_dem, -prez_gop, -day)
 
 ```
 
-1. clean the data in pols-month.csv. Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable
-
-```{r}
-separate()
-
-
-
-```
 
 ## Including Plots
 
