@@ -34,7 +34,7 @@ pols_month =
 ## Clean the data in snp.csv
 
 ```{r}
-snp = 
+snp_df = 
   read_csv("./fivethirtyeight_datasets/snp.csv",
            na = c("NA", ".", "")) |>
   janitor::clean_names() |>
@@ -52,18 +52,17 @@ snp =
 
 ```
 
-Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
+## Tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
 
 
 ```{r}
-  arrange()
-
-
-
-
-
-
-
+unemployment_df = 
+  read_csv("./fivethirtyeight_datasets/unemployment.csv",
+           na = c("NA", ".", "")) |>
+  pivot_longer(
+    Jan:Dec,
+    names_to = "Month", 
+    values_to = "Unemployment(%)")
 
 ```
 
