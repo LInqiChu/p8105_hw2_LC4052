@@ -44,7 +44,8 @@ snp_df =
     year = as.integer(year),
     year = ifelse(year < 50,
                  2000 + year,
-                 1900 + year)) |>
+                 1900 + year),
+    year = as.character(year)) |>
   select(-day) |>
   relocate(year, month, .before = everything()) |> 
   arrange(year, month)
@@ -68,26 +69,39 @@ unemployment_df =
     month = factor(month, 
                       levels = c("jan","feb","mar","apr","may","jun",
                                  "jul","aug","sep","oct","nov","dec"),
-                      labels = month.name))
+                      labels = month.name),
+    year = as.character(year))
 
 ```
 
 
 ## Join the datasets by merging snp into pols, and merging unemployment into the result.
 
+```{r}
+pols_df = 
+  left_join(pols_month, snp_df, by = c("year","month")) |>
+  left_join(unemployment_df, by = c("year","month"))
+  
+```
 
 
+## Description
 
 ```{r}
-pols_df = left_join(pols_month, snp_df, by = c("year","month"))
-  
-
+names(pols_month)
+names(snp_df)
+names(unemployment_df)
+names(pols_df)
 
 ```
 
-Write a short paragraph about these datasets. Explain briefly what each dataset contained, and 
-Pols-month.csv contains variables:
-describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+Pols-month contains variables:"year", "month", "gov_gop", "sen_gop", "rep_gop", "gov_dem", "sen_dem", "rep_dem" and "president".
+Snp_df contains variables: "year", "month" and "close".
+Unemployment_df contains variables: "year", "month" and "unemployment(%)".
+
+The resulting dataset spans from 1947 to 2015 and contains 822 observations, each with 11 features.
+It contains variables: "year", "month", "gov_gop", "sen_gop", "rep_gop", "gov_dem", "sen_dem", "rep_dem", "president", "close" and "unemployment(%)".
+
 
 
 
