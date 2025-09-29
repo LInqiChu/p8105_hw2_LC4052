@@ -108,7 +108,7 @@ It contains variables: "year", "month", "gov_gop", "sen_gop", "rep_gop", "gov_de
 
 # Problem 2
 
-## Clean the Mr. Trash Wheel sheet:
+## Clean the Mr. Trash Wheel sheet.
 
 ```{r}
 mrtrash_df = 
@@ -117,61 +117,98 @@ mrtrash_df =
              skip = 1,
              na = c("NA", ".", "")) |>
   janitor::clean_names() |>
+  select(-c(15, 16)) |>
   filter(!is.na(dumpster) & !is.na(weight_tons)) |>
-  mutate(sports_balls = as.integer(round(sports_balls)))
-
-
-
+  mutate(sports_balls = as.integer(round(sports_balls))) |>
+  mutate(trash_wheel = "Mr. Trash Wheel") |>
+  mutate(year = as.integer(year))
 
 
 ```
 
 
-
-
-
-
+## Clean the Professor Trash Wheel dataset.
 
 ```{r}
-
-
-
-
-
-
-
+protrash_df = 
+  read_excel("./trash_collection_data/202409 Trash Wheel Collection Data.xlsx",
+             sheet = "Professor Trash Wheel",
+             skip = 1,
+             na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  filter(!is.na(dumpster) & !is.na(weight_tons)) |>
+  mutate(trash_wheel = "Professor Trash Wheel") |>
+  mutate(year = as.integer(year))
+  
+  
 ```
 
 
+## Clean the Gwynnda Trash Wheel dataset.
 
 ```{r}
-
-
-
-
-
-
+gwytrash_df = 
+  read_excel("./trash_collection_data/202409 Trash Wheel Collection Data.xlsx",
+             sheet = "Gwynnda Trash Wheel",
+             skip = 1,
+             na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  filter(!is.na(dumpster) & !is.na(weight_tons)) |>
+  mutate(trash_wheel = "Gwynnda Trash Wheel") |>
+  mutate(year = as.integer(year))
 
 
 ```
 
 
-
-
-
+# Combine the three dataset.
 
 ```{r}
+trash_data <- bind_rows(mrtrash_df, protrash_df, gwytrash_df)
 
 ```
 
 
+The resulting data has `r nrow(trash_data)` observations, each with `r ncol(trash_data)` variables. The key variables are: `r names(trash_data)`.
 
+The total weight of trash collected by Professor Trash Wheel is `r sum(trash_data[trash_data$trash_wheel == "Professor Trash Wheel", "weight_tons"])`. 
+The total number of cigarette butts collected by Gwynnda in June of 2022 is 
+`r sum(trash_data[trash_data$trash_wheel == "Gwynnda Trash Wheel", "cigarette_butts"])`.
 
 
 
 
 # Problem 3
 
+
+## Create a single, well-organized dataset with all the information contained in these data files. 
+
+
+import, clean, tidy, and otherwise wrangle each of these datasets; check for completeness and correctness across datasets (e.g. by viewing individual datasets and monitoring warning messages); merge to create a single, final dataset; and organize this so that variables and observations are in meaningful orders.
+
+
+```{r}
+zipcodes_df = 
+  read_csv("./zillow_data/Zip Codes.csv",
+             na = c("NA", ".", "")) |>
+  janitor::clean_names()
+
+names(zipcodes_df)
+
+```
+
+
+```{r}
+zori_df = 
+  read_csv("./zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv",
+             na = c("NA", ".", "")) |>
+  janitor::clean_names()
+
+names(zori_df)
+
+
+```
+
 ```{r}
 
 
@@ -180,10 +217,5 @@ mrtrash_df =
 
 
 
-
-
 ```
-
-
-
 
