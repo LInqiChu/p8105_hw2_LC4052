@@ -76,7 +76,7 @@ unemployment_df =
 ```
 
 
-## Join the datasets by merging snp into pols, and merging unemployment into the result.
+## Join the datasets by merging snp into pols, and merging unemployment into the result
 
 ```{r}
 pols_df = 
@@ -86,7 +86,7 @@ pols_df =
 ```
 
 
-## Description
+## Description of datasets
 
 ```{r}
 names(pols_month)
@@ -108,7 +108,7 @@ It contains variables: "year", "month", "gov_gop", "sen_gop", "rep_gop", "gov_de
 
 # Problem 2
 
-## Clean the Mr. Trash Wheel sheet.
+## Clean the Mr. Trash Wheel sheet
 
 ```{r}
 mrtrash_df = 
@@ -127,7 +127,7 @@ mrtrash_df =
 ```
 
 
-## Clean the Professor Trash Wheel dataset.
+## Clean the Professor Trash Wheel dataset
 
 ```{r}
 protrash_df = 
@@ -144,7 +144,7 @@ protrash_df =
 ```
 
 
-## Clean the Gwynnda Trash Wheel dataset.
+## Clean the Gwynnda Trash Wheel dataset
 
 ```{r}
 gwytrash_df = 
@@ -161,7 +161,7 @@ gwytrash_df =
 ```
 
 
-# Combine the three dataset.
+# Combine the three dataset
 
 ```{r}
 trash_data <- bind_rows(mrtrash_df, protrash_df, gwytrash_df)
@@ -180,12 +180,12 @@ The total number of cigarette butts collected by Gwynnda in June of 2022 is
 
 # Problem 3
 
-
-## Create a single, well-organized dataset with all the information contained in these data files. 
+## Create a single, well-organized dataset
 
 
 import, clean, tidy, and otherwise wrangle each of these datasets; check for completeness and correctness across datasets (e.g. by viewing individual datasets and monitoring warning messages); merge to create a single, final dataset; and organize this so that variables and observations are in meaningful orders.
 
+### Clean the zip_codes file
 
 ```{r}
 zipcodes_df = 
@@ -198,11 +198,19 @@ names(zipcodes_df)
 ```
 
 
+### Clean the zip_zori file
+
 ```{r}
 zori_df = 
   read_csv("./zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv",
              na = c("NA", ".", "")) |>
-  janitor::clean_names()
+  pivot_longer(
+    cols = 10 : 125,
+    names_to = "file_date", 
+    values_to = "zori_value") |>
+    mutate(file_date = as.Date(file_date)) |>
+  rename(county = CountyName) |>                       
+  mutate(county = sub(" County$", "", county))  
 
 names(zori_df)
 
