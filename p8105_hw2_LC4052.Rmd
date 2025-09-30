@@ -161,7 +161,7 @@ gwytrash_df =
 ```
 
 
-# Combine the three dataset
+# Combine the three datasets
 
 ```{r}
 trash_data <- bind_rows(mrtrash_df, protrash_df, gwytrash_df)
@@ -182,16 +182,17 @@ The total number of cigarette butts collected by Gwynnda in June of 2022 is
 
 ## Create a single, well-organized dataset
 
-
-import, clean, tidy, and otherwise wrangle each of these datasets; check for completeness and correctness across datasets (e.g. by viewing individual datasets and monitoring warning messages); merge to create a single, final dataset; and organize this so that variables and observations are in meaningful orders.
-
 ### Clean the zip_codes file
 
 ```{r}
 zipcodes_df = 
   read_csv("./zillow_data/Zip Codes.csv",
              na = c("NA", ".", "")) |>
-  janitor::clean_names()
+  janitor::clean_names() |>
+  mutate(
+    file_date = as.character(lubridate::mdy(file_date))
+  ) |>
+  select(county,zip_code,file_date, everything())
 
 names(zipcodes_df)
 
@@ -207,17 +208,79 @@ zori_df =
   pivot_longer(
     cols = 10 : 125,
     names_to = "file_date", 
-    values_to = "zori_value") |>
-    mutate(file_date = as.Date(file_date)) |>
-  rename(county = CountyName) |>                       
-  mutate(county = sub(" County$", "", county))  
+    values_to = "rent_price") |>
+    mutate(file_date = as.character(file_date)) |>
+  rename(county = CountyName, zip_code = RegionName) |>                       
+  mutate(county = sub(" County$", "", county)) |> 
+  arrange(zip_code) |>
+  select(county,zip_code,file_date, rent_price, everything())
+
 
 names(zori_df)
+
+```
+
+
+### Combine the two datasets
+
+```{r}
+combined_data = 
+  full_join(zipcodes_df, zori_df, by = c("county","zip_code","file_date")) |>
+  select(county,zip_code,file_date, rent_price, neighborhood, everything())
+
+```
+
+
+### Descriptions
+
+The resulting dataset contains information from two zillow datasets (`r zipcodes_df`and`r zori_df`) with `r length(combined_data)` observations and `r ncol(combined_data)` variables. Each observation has its identical variables `r county`,`r zip_code`,`r file_date`, and some other variables such as`r rent_price`,`r neighborhood`, and `r region_id`, etc.
+
+
+```{r}
+
+
+
+
 
 
 ```
 
+
+
+
 ```{r}
+
+
+
+
+
+
+```
+
+
+
+
+
+How many total observations exist? How many unique ZIP codes are included, and how many unique neighborhoods?
+
+There are observations, each with variables.
+
+range(zip_codes)
+
+range(neighborhood)
+
+
+Which ZIP codes appear in the ZIP code dataset but not in the Zillow Rental Price dataset? 
+
+
+Using a few illustrative examples discuss why these ZIP codes might be excluded from the Zillow dataset.
+
+Rental prices fluctuated dramatically during the COVID-19 pandemic. For all available ZIP codes, compare rental prices in January 2021 to prices in January 2020. Make a table that shows the 10 ZIP codes (along with the borough and neighborhood) with largest drop in price from January 2020 to 2021. Comment.
+
+```{r}
+
+
+
 
 
 
