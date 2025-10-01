@@ -316,4 +316,4 @@ print(top10_drop)
 ```
 
 The result shows that rent price in Manhattan county dropped the most during the COVID-19 pandemic, with decreases ranging from approximately 685 dollars to 913 dollars.
-Particularly affected were premium neighborhoods including Lower Manhattan, Lower East Side, Chelsea and Clinton, and Gramercy Park, reflecting a broader trend of urban out-migration which may be caused by remote work opportunities.
+Particularly affected were premium neighborhoods including Lower Manhattan, Lower East Side, Chelsea and Clinton, and Gramercy Park, reflecting a broader trend of urban out-migration which might be caused by remote work opportunities.
