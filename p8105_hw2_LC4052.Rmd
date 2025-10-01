@@ -112,7 +112,7 @@ It contains variables: "year", "month", "gov_gop", "sen_gop", "rep_gop", "gov_de
 
 ```{r}
 mrtrash_df = 
-  read_excel("./trash_collection_data/202409 Trash Wheel Collection Data.xlsx",
+  read_excel("./trash_collection_data/202509 Trash Wheel Collection Data.xlsx",
              sheet = "Mr. Trash Wheel",
              skip = 1,
              na = c("NA", ".", "")) |>
@@ -131,7 +131,7 @@ mrtrash_df =
 
 ```{r}
 protrash_df = 
-  read_excel("./trash_collection_data/202409 Trash Wheel Collection Data.xlsx",
+  read_excel("./trash_collection_data/202509 Trash Wheel Collection Data.xlsx",
              sheet = "Professor Trash Wheel",
              skip = 1,
              na = c("NA", ".", "")) |>
@@ -148,8 +148,8 @@ protrash_df =
 
 ```{r}
 gwytrash_df = 
-  read_excel("./trash_collection_data/202409 Trash Wheel Collection Data.xlsx",
-             sheet = "Gwynnda Trash Wheel",
+  read_excel("./trash_collection_data/202509 Trash Wheel Collection Data.xlsx",
+             sheet = "Gwynns Falls Trash Wheel",
              skip = 1,
              na = c("NA", ".", "")) |>
   janitor::clean_names() |>
@@ -231,50 +231,56 @@ combined_data =
 ```
 
 
-### Descriptions
 
-The resulting dataset contains information from two zillow datasets (`r zipcodes_df`and`r zori_df`) with `r length(combined_data)` observations and `r ncol(combined_data)` variables. Each observation has its identical variables `r county`,`r zip_code`,`r file_date`, and some other variables such as`r rent_price`,`r neighborhood`, and `r region_id`, etc.
+## Descriptions
 
+The resulting dataset contains information from two zillow datasets (`zipcodes_df` and `zori_df`) with `r nrow(combined_data)` observations and `r ncol(combined_data)` variables. Each observation has its identical variables (`county`, `zip_code`, `file_date`), and some other variables such as `rent_price` and `neighborhood`.
+
+
+### unique zip codes
 
 ```{r}
+combined_data |> 
+  distinct(zip_code) |> 
+  nrow()
 
+```
+There are 320 unique ZIP codes.
 
+### unique neighborhoods
 
+```{r}
+combined_data |> 
+  distinct(neighborhood) |> 
+  nrow()
 
+```
+There are 43 unique neighborhoods.
 
+### unique zip codes in `zip_codes`
+
+```{r}
+missing_part = 
+  zipcodes_df |> 
+  anti_join(zori_df, by = "zip_code") |> 
+  distinct(zip_code)
+
+print(missing_part)
 
 ```
 
+The above are the ZIP codes appear in the ZIP code dataset but not in the Zillow Rental Price dataset.
 
 
+### Using a few illustrative examples discuss why these ZIP codes might be excluded from the Zillow dataset.
 
-```{r}
-
-
-
-
-
-
-```
+Possible reasons include:
+(1) These ZIP codes are primarily commercial,institutional or parks rather than residential. 
+(2) The number of rental units is too small for Zillow to reliably estimate rent prices.
+(3) The ZIP code is new or unique-purpose (assigned to an organization or facility).
 
 
-
-
-
-How many total observations exist? How many unique ZIP codes are included, and how many unique neighborhoods?
-
-There are observations, each with variables.
-
-range(zip_codes)
-
-range(neighborhood)
-
-
-Which ZIP codes appear in the ZIP code dataset but not in the Zillow Rental Price dataset? 
-
-
-Using a few illustrative examples discuss why these ZIP codes might be excluded from the Zillow dataset.
-
+### Table
 Rental prices fluctuated dramatically during the COVID-19 pandemic. For all available ZIP codes, compare rental prices in January 2021 to prices in January 2020. Make a table that shows the 10 ZIP codes (along with the borough and neighborhood) with largest drop in price from January 2020 to 2021. Comment.
 
 ```{r}
